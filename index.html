@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#fff7e9">
+<meta name="description" content="동물 친구들과 숫자 1부터 10까지 즐겁게 배워요.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>숫자 동물원</title>
+<style>
+:root{font-family:"Trebuchet MS",system-ui,sans-serif;color:#574735;background:#fff7e9;font-synthesis:none}
+*{box-sizing:border-box}body{margin:0;min-width:320px;min-height:100vh;background:radial-gradient(circle at 10% 5%,#ffedce 0,transparent 28%),#fff7e9}
+button{font:inherit;cursor:pointer;border:0;touch-action:manipulation}
+.app{max-width:720px;margin:auto;padding:calc(15px + env(safe-area-inset-top)) 15px calc(22px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;margin:4px 2px 17px}.brand{display:flex;gap:10px;align-items:center}.logo{font-size:35px}.brand strong{display:block;font-size:23px}.brand small{display:block;color:#9b8264;font-size:12px;margin-top:2px}.stars{background:#fff;border:2px solid #f4dfbd;border-radius:20px;padding:8px 13px;color:#9b6b28}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:12px}.tabs button{border-radius:14px;padding:13px 3px;background:#f4e8d5;color:#856d50;font-size:14px}.tabs button.active{background:#f2a34c;color:#fff;box-shadow:0 4px 0 #d98636}
+.panel{background:#fff;border:2px solid #f5e8d4;border-radius:25px;padding:21px 16px;box-shadow:0 8px 24px #a47b3910;text-align:center;min-height:540px}
+.eyebrow{display:flex;justify-content:space-between;color:#b18a5b;font-size:13px}.panel h1{font-size:clamp(21px,5vw,28px);margin:21px 0 8px;color:#5b4936}
+.big-number{display:block;margin:auto;background:transparent;color:#ef9840;font-size:clamp(100px,25vw,132px);line-height:1.05;padding:0 25px;border-radius:20px}.word{font-size:23px;color:#9d7953}
+.scene{margin:17px auto 8px;display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap}.mascot{font-size:68px;background:#fff3df;border-radius:50%;width:108px;height:108px;display:grid;place-items:center}.bubble{background:#f3f8e9;border-radius:16px;padding:12px;color:#71834d;font-size:14px;max-width:220px}
+.hint{color:#a28c70;font-size:14px;margin:14px 0}.numbers{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:14px 0}.numbers button,.answers button{background:#fff3df;border:2px solid #f3dfc2;border-radius:14px;min-height:50px;font-size:22px;color:#866747}.numbers button.selected{background:#f3a34e;border-color:#f3a34e;color:#fff}
+.row{display:flex;gap:9px}.row button{flex:1}.primary,.soft{border-radius:14px;padding:14px 15px;font-size:16px}.primary{background:#f2a04b;color:white;box-shadow:0 4px 0 #d98636}.primary:disabled{opacity:.35;box-shadow:none}.soft{background:#f5eee3;color:#866f51}.wide{width:100%;margin-top:10px}
+.count-scene,.quiz-scene{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:7px;min-height:175px;padding:17px 7px;background:#fff8ed;border-radius:20px;margin-top:20px}.count-scene button{font-size:clamp(34px,8vw,52px);background:transparent;padding:0}.count-controls{display:flex;justify-content:center;align-items:center;gap:22px;margin:17px}.count-controls strong{font-size:22px;color:#e7943e}.count-controls button{font-size:24px;width:50px;height:46px}
+.answers{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:22px 0}.answers button{min-height:74px;font-size:31px}.answers .correct{background:#dff1d4;border-color:#a9d58f;color:#527c3d}.answers .wrong{background:#ffe3df;border-color:#f2b2a8;color:#b65b50}.feedback{font-size:20px;color:#df8b37;margin:15px 0}
+footer{text-align:center;color:#b29b7d;font-size:13px;padding:16px 0}
+@media(min-width:600px){.app{padding-top:26px}.panel{padding:27px 32px}.tabs button{font-size:16px}.count-scene,.quiz-scene{min-height:205px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="app">
+<header><div class="brand"><span class="logo">🌈</span><div><strong>숫자 동물원</strong><small>오늘도 숫자랑 놀아볼까?</small></div></div><div class="stars">⭐ <b id="score">0</b></div></header>
+<nav class="tabs"><button data-mode="learn" class="active">🔢 숫자 배우기</button><button data-mode="count">🐾 개수 세기</button><button data-mode="quiz">🎯 숫자 퀴즈</button></nav>
+<section id="content" class="panel" aria-live="polite"></section>
+<footer>짧게 놀고, 많이 칭찬해 주세요 💛</footer>
+</main>
+<script>
+const animals=[['🐰','토끼'],['🐻','곰'],['🐱','고양이'],['🐶','강아지'],['🐸','개구리'],['🦊','여우'],['🐼','판다'],['🐥','병아리'],['🦁','사자'],['🐵','원숭이']];
+const words=['하나','둘','셋','넷','다섯','여섯','일곱','여덟','아홉','열'];
+let mode='learn',num=1,score=0,q=0,answered=false,selected=null;
+const $=s=>document.querySelector(s);
+function speak(t){if(!('speechSynthesis'in window))return; speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=.85;speechSynthesis.speak(u)}
+function animal(n){return animals[n-1]}
+function setMode(m){mode=m;document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));if(m==='quiz'){answered=false;selected=null}render()}
+function setNum(n){num=Math.max(1,Math.min(10,n));render()}
+function render(){
+ $('#score').textContent=score;
+ const c=$('#content'),a=animal(num);
+ if(mode==='learn'){
+ c.innerHTML=`<div class="eyebrow"><span>숫자 배우기</span><span>${num} / 10</span></div><h1>이 숫자는 무엇일까요?</h1><button class="big-number" id="sayNum">${num}</button><div class="word">${words[num-1]}</div><div class="scene"><span class="mascot">${a[0]}</span><span class="bubble">${a[1]} 친구와 함께 숫자 ${num}!</span></div><p class="hint">숫자를 눌러보고 소리도 들어보세요 👆</p><div class="numbers">${Array.from({length:10},(_,i)=>`<button data-n="${i+1}" class="${num===i+1?'selected':''}">${i+1}</button>`).join('')}</div><div class="row"><button class="soft" id="prev" ${num===1?'disabled':''}>← 이전</button><button class="primary" id="next" ${num===10?'disabled':''}>다음 숫자 →</button></div>`;
+ $('#sayNum').onclick=()=>speak(`${num}. ${words[num-1]}!`);$('#prev').onclick=()=>setNum(num-1);$('#next').onclick=()=>setNum(num+1);
+ c.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>{setNum(+b.dataset.n);speak(`${b.dataset.n}. ${words[+b.dataset.n-1]}!`)});
+ }else if(mode==='count'){
+ c.innerHTML=`<div class="eyebrow"><span>개수 세기</span><span>1~10</span></div><h1>${a[1]}가 몇 마리 있을까요?</h1><div class="count-scene">${Array.from({length:num},(_,i)=>`<button aria-label="${i+1}번째 ${a[1]}">${a[0]}</button>`).join('')}</div><p class="hint">동물 친구들을 하나씩 톡톡 눌러 세어보세요!</p><div class="count-controls"><button class="soft" id="minus">−</button><strong>${num}마리</strong><button class="soft" id="plus">＋</button></div><button class="primary wide" id="sayCount">🔊 몇 마리인지 들려줘</button><div class="numbers">${Array.from({length:10},(_,i)=>`<button data-n="${i+1}" class="${num===i+1?'selected':''}">${i+1}</button>`).join('')}</div>`;
+ $('#minus').onclick=()=>setNum(num-1);$('#plus').onclick=()=>setNum(num+1);$('#sayCount').onclick=()=>speak(`${a[1]}가 모두 ${num}마리 있어요!`);
+ c.querySelectorAll('.count-scene button').forEach((b,i)=>b.onclick=()=>speak(`${i+1}`));
+ c.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>setNum(+b.dataset.n));
+ }else{
+ const n=((q+2)%10)+1,qa=animals[(q+3)%10],opts=[...new Set([n,Math.max(1,n-1),Math.min(10,n+2)])];let k=1;while(opts.length<3){let x=((n+k)%10)+1;if(!opts.includes(x))opts.push(x);k++}opts.sort((x,y)=>x-y);
+ c.innerHTML=`<div class="eyebrow"><span>숫자 퀴즈</span><span>별 ${score}개</span></div><h1>${qa[1]}가 몇 마리 있을까요?</h1><div class="quiz-scene">${Array.from({length:n},()=>`<span style="font-size:clamp(34px,8vw,52px)">${qa[0]}</span>`).join('')}</div><p class="hint">맞는 숫자를 골라주세요!</p><div class="answers">${opts.map(x=>`<button data-answer="${x}" class="${answered&&x===n?'correct':answered&&x===selected?'wrong':''}" ${answered?'disabled':''}>${x}</button>`).join('')}</div>${answered?`<div class="feedback">${selected===n?'🎉 와아! 정답이에요!':`괜찮아요! 정답은 ${n}이에요.`}</div><button class="primary wide" id="nextQ">다음 문제 →</button>`:`<button class="soft wide" id="repeat">🔊 문제 다시 듣기</button>`}`;
+ c.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>{if(answered)return;selected=+b.dataset.answer;answered=true;if(selected===n){score++;speak('정답이에요! 정말 잘했어요!')}else speak('괜찮아요. 다시 해봐요!');render()});
+ if(!answered)$('#repeat').onclick=()=>speak(`${qa[1]}가 몇 마리 있을까요?`);
+ if(answered)$('#nextQ').onclick=()=>{q++;answered=false;selected=null;render()};
+ }
+}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+render();
+if('serviceWorker'in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+</script>
+</body></html>
