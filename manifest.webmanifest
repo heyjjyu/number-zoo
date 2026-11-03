@@ -1,15 +1,15 @@
 {
   "id": "./",
-  "name": "숫자 동물원",
-  "short_name": "숫자동물원",
-  "description": "동물 친구들과 숫자 1부터 10까지 즐겁게 배워요.",
+  "name": "알록달록 숫자 동물원",
+  "short_name": "숫자 동물원",
+  "description": "귀여운 동물 친구들과 숫자 1부터 10까지 배워요.",
   "lang": "ko-KR",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#fff7e9",
-  "theme_color": "#fff7e9",
+  "background_color": "#fff5fb",
+  "theme_color": "#fff5fb",
   "icons": [
     {
       "src": "./icon-192.png",

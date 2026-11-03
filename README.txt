@@ -1,10 +1,10 @@
-숫자 동물원 PWA 배포 파일
+숫자 동물원 v2 PWA 배포 파일
 
-GitHub Pages 배포:
-1) GitHub에서 새 PUBLIC 저장소를 만듭니다 (예: number-zoo).
-2) 이 ZIP을 휴대폰에서 압축 해제합니다.
-3) 저장소의 Add file > Upload files에서 index.html, manifest.webmanifest, sw.js, icon.svg, icon-192.png, icon-512.png를 업로드하고 Commit changes 합니다.
-4) Settings > Pages > Build and deployment > Deploy from a branch > main > /(root) > Save.
-5) 배포된 주소를 Chrome으로 열고 메뉴 > 앱 설치(또는 홈 화면에 추가)를 선택합니다.
+기존 GitHub 저장소에 업데이트하려면:
+1. ZIP 압축을 풀어 index.html, manifest.webmanifest, sw.js, icon-192.png, icon-512.png를 선택합니다.
+2. GitHub 저장소 number-zoo에 접속합니다.
+3. Add file > Upload files에서 파일 5개를 업로드하고 Commit changes 합니다.
+4. GitHub Pages가 자동으로 다시 배포합니다.
+5. 갤럭시 Chrome에서 기존 앱 주소를 열어 새로고침합니다. 업데이트가 늦으면 Chrome에서 해당 사이트 데이터/캐시를 지우고 다시 접속하거나 앱을 닫았다가 다시 열어주세요.
 
-참고: GitHub Free에서는 Pages 사이트가 공개 URL로 제공됩니다. 앱에는 아이의 이름이나 개인정보를 입력하지 마세요.
+학습 순서: 숫자 보기 및 음성 -> 해당 개수의 동물 보기 및 음성 -> 손가락으로 숫자 따라 쓰기 -> 다음 숫자 자동 진행. 1부터 10까지 완료 후 축하 화면이 나옵니다.
